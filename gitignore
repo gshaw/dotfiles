@@ -1,0 +1,10 @@
+.DS_Store
+.svn
+.hg
+.hgignore
+*~
+
+# Xcode
+*.xcworkspace
+!default.xcworkspace
+xcuserdata

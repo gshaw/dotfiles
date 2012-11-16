@@ -1,0 +1,27 @@
+[user]
+	name = Gerry Shaw
+	email = gshaw@reinvent.com
+[alias]
+	co = checkout
+	st = status
+	br = branch
+	lg = log --graph --pretty=format:'%C(yellow)%h%Creset %s %C(cyan)<%an>%Creset' --abbrev-commit --date=relative
+
+[apply]
+	whitespace = nowarn
+[color]
+	diff = auto
+	status = auto
+	branch = auto
+	interactive = auto
+[core]
+	editor = subl -w
+	excludesfile = /Users/gerry/.gitignore
+[github]
+	user = gshaw
+[difftool]
+	prompt = false
+[branch]
+	autosetuprebase = always
+[push]
+	default = simple
