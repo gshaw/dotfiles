@@ -1,4 +1,4 @@
-export PATH=/Users/gerry/.rbenv/shims:/Users/gerry/.rbenv/bin:$PATH
+export PATH=$HOME/.rbenv/shims:$HOME/.rbenv/bin:$PATH
 
 # Kill idle apps after 1 hour
 export POW_TIMEOUT=3600

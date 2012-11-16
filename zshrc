@@ -4,7 +4,7 @@ ZSH_THEME="gshaw"
 
 plugins=(git bundler brew gem gshaw)
 
-export PATH="/usr/local/bin:$PATH"
+export PATH="/usr/local/bin:/usr/local/sbin:$PATH"
 
 source $ZSH/oh-my-zsh.sh
 

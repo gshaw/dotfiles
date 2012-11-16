@@ -2,11 +2,10 @@
 	name = Gerry Shaw
 	email = gshaw@reinvent.com
 [alias]
+	lg = log --graph --pretty=format:'%C(yellow)%h%Creset %s %C(cyan)<%an>%Creset' --abbrev-commit --date=relative
 	co = checkout
 	st = status
 	br = branch
-	lg = log --graph --pretty=format:'%C(yellow)%h%Creset %s %C(cyan)<%an>%Creset' --abbrev-commit --date=relative
-
 [apply]
 	whitespace = nowarn
 [color]

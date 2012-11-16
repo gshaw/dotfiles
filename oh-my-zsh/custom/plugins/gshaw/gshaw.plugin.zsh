@@ -14,6 +14,7 @@ unsetopt correct_all
 # a few aliases I like
 alias s='subl'
 alias ls='gls --color=auto'
+alias lock='open ~/bin/Lock\ Computer.app'
 
 # b()  { echo "bundle exec $*" && bundle exec $* }
 # bi() { echo "bundle install $*" && bundle install $* }
