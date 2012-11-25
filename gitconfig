@@ -16,6 +16,7 @@
 [core]
 	editor = subl -w
 	excludesfile = /Users/gerry/.gitignore
+	quotepath = false
 [github]
 	user = gshaw
 [difftool]
@@ -23,4 +24,4 @@
 [branch]
 	autosetuprebase = always
 [push]
-	default = simple
+	default = current
