@@ -16,10 +16,13 @@ alias s='subl'
 alias ls='gls --color=auto'
 alias lock='open ~/bin/Lock\ Computer.app'
 
-# b()  { echo "bundle exec $*" && bundle exec $* }
-# bi() { echo "bundle install $*" && bundle install $* }
-# r()  { echo "bundle exec rails $*" && bundle exec rails $* }
-# rake()  { echo "bundle exec rake $*" && bundle exec rake $* }
+alias r='bundle exec rails $*'
+alias b='bundle'
+alias bi='echo bundle install && bundle install'
+
+alias devlog='echo "tail -f log/development.log" && tail -f log/development.log'
+
+rake()  { echo "bundle exec rake $*" && bundle exec rake $* }
 guard()  { echo "bundle exec guard $*" && bundle exec guard $* }
 
 export PATH="/usr/local/sbin:$PATH"
