@@ -1,0 +1,8 @@
+#!/bin/zsh 
+
+find /Users/gerry/.Trash -mindepth 1 -prune -not -newerat '7 days ago' -exec rm -rf {} \;
+find /Users/gerry/.Trash -depth -type d -empty -exec rmdir {} \;
+
+# log run of compost to prove it's running
+AFTER=`du -hs .Trash | awk '{print $1}'`
+echo "`date` $AFTER" >>/Users/gerry/.compost_log
