@@ -2,9 +2,7 @@ ZSH=$HOME/.oh-my-zsh
 ZSH_THEME="gshaw"
 # DISABLE_AUTO_UPDATE="true"
 
-plugins=(git bundler brew gem gshaw)
-
-export PATH="/usr/local/bin:/usr/local/sbin:$PATH"
+plugins=(git brew gem bundler gshaw)
 
 source $ZSH/oh-my-zsh.sh
 
