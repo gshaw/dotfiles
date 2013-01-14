@@ -7,4 +7,7 @@ plugins=(git brew gem bundler gshaw)
 source $ZSH/oh-my-zsh.sh
 
 # for Homebrew installed rbenv
+eval "$(rbenv init -)"
+
+# shell completions
 if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
