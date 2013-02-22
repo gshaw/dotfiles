@@ -27,6 +27,9 @@ export PATH="/usr/local/bin:$PATH"
 export PATH="$(dirname $0)/bin:$PATH"
 export PATH="/Users/gerry/bin:$PATH"
 
+# unlimited history
+export HISTSIZE=1000000
+
 source ~/.ssh/shell_vars
 
 echo
