@@ -1,6 +1,6 @@
 [user]
 	name = Gerry Shaw
-	email = gshaw@reinvent.com
+	email = gshaw@venturemedia.com
 [alias]
 	lg = log --graph --pretty=format:'%C(yellow)%h%Creset %s %C(cyan)<%an>%Creset' --abbrev-commit --date=relative
 	co = checkout
@@ -29,7 +29,7 @@
 	cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
 [diff]
 	tool = Kaleidoscope
-	algorithm = histogram
+	algorithm = patience
 [mergetool "Kaleidoscope"]
 	cmd = ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
 	trustExitCode = true
@@ -37,3 +37,5 @@
 	prompt = false
 [merge]
 	tool = Kaleidoscope
+[help]
+	autocorrect = 1
