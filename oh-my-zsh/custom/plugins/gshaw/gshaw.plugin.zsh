@@ -13,7 +13,7 @@ unsetopt correct_all
 
 # a few aliases I like
 alias b='bundle'
-alias r='rails'
+alias r='bin/rails'
 alias s='subl'
 alias ls='gls --color=auto'
 alias lock='open ~/bin/Lock\ Computer.app'
