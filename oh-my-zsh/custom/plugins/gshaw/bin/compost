@@ -1,8 +1,14 @@
-#!/bin/zsh 
+#!/bin/zsh
 
+# Delete files > 100MB immediately
+gfind /Users/gerry/.Trash -type f -size +100M -exec rm -rf {} \;
+
+# Delete files that are older than 7 days
 gfind /Users/gerry/.Trash -mindepth 1 -prune -not -newerat '7 days ago' -exec rm -rf {} \;
+
+# Remove empty folders
 gfind /Users/gerry/.Trash -depth -type d -empty -exec rmdir {} \;
 
-# log run of compost to prove it's running
+# Log run of compost to prove it's running and keep interesting stats
 AFTER=`gdu -hs /Users/gerry/.Trash | awk '{print $1}'`
 echo "`gdate` $AFTER" >>/Users/gerry/.compost_log
