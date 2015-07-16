@@ -26,4 +26,3 @@ source ~/.ssh/shell_vars
 
 echo
 fortune
-cd ~
