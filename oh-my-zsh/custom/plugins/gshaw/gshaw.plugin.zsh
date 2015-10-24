@@ -1,4 +1,4 @@
-export EDITOR='subl -w'
+export EDITOR='atom -w'
 
 # autocorrect is more annoying than helpful
 unsetopt correct_all
@@ -6,7 +6,8 @@ unsetopt correct_all
 # a few aliases I like
 alias b='bundle'
 alias r='bin/rails'
-alias s='subl'
+# alias s='subl'
+alias e='atom' # e is for editor
 alias ls='gls --color=auto'
 alias lock='open ~/bin/Lock\ Computer.app'
 
