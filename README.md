@@ -24,3 +24,5 @@ After installing, open a new terminal window to see the effects.
 * Custom abbreviations for common actions
 
 * Integration with [Oh My Fish](https://github.com/oh-my-fish/oh-my-fish)
+
+![Screenshot](https://cloud.githubusercontent.com/assets/33321/10742233/4f33fefa-7be9-11e5-9faa-bed22f83144a.png)
