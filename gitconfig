@@ -1,11 +1,13 @@
 [user]
 	name = Gerry Shaw
 	email = gshaw@venturemedia.com
+	signingkey = 44DB8CE8
 [alias]
 	lg = log --graph --pretty=format:'%C(yellow)%h%Creset %s %C(cyan)<%an>%Creset' --abbrev-commit --date=relative
 	co = checkout
 	st = status
 	br = branch
+    cp = cherry-pick
 [apply]
 	whitespace = nowarn
 [color]
@@ -14,22 +16,19 @@
 	branch = auto
 	interactive = auto
 [core]
-	editor = atom -w
+	editor = code --wait
 	excludesfile = /Users/gerry/.gitignore
 	quotepath = false
 [github]
 	user = gshaw
-[difftool]
-	prompt = false
+[diff]
+    tool = default-difftool
+[difftool "default-difftool"]
+    cmd = code --wait --diff $LOCAL $REMOTE
 [branch]
 	autosetuprebase = always
 [push]
 	default = current
-[difftool "Kaleidoscope"]
-	cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
-[diff]
-	tool = Kaleidoscope
-	algorithm = patience
 [mergetool "Kaleidoscope"]
 	cmd = ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
 	trustExitCode = true
@@ -46,3 +45,5 @@
 	clean = git-lfs clean %f
 	smudge = git-lfs smudge %f
 	required = true
+[commit]
+	gpgsign = false
