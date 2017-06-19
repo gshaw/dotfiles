@@ -15,6 +15,22 @@ rake install
 
 After installing, open a new terminal window to see the effects.
 
+## Homebrew
+
+Update Homebrew packages and casks using:
+
+```
+brew list | xargs -L1 > Brewfile
+brew cask list | xargs -L1 > Caskfile
+```
+
+To restore packages:
+
+```
+cat Brewfile | xargs brew
+cat Caskfile | xargs brew cask
+```
+
 ## Features
 
 * Greet each new terminal with a fortune.  `brew install fortune`
