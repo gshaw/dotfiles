@@ -3,7 +3,7 @@ function custom_shell_init
   abbr g git
   abbr guard bundle exec guard
   abbr l exa
-  abbr r bin/rails
+  abbr b bin/rails
 
   set -Ux EDITOR code
 
