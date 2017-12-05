@@ -20,8 +20,8 @@ After installing, open a new terminal window to see the effects.
 Update Homebrew packages and casks using:
 
 ```
-brew list | xargs -L1 > Brewfile
-brew cask list | xargs -L1 > Caskfile
+brew list > ~/.dotfiles/brew/Brewfile
+brew cask list > ~/.dotfiles/brew/Caskfile
 ```
 
 To restore packages:
