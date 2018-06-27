@@ -5,7 +5,7 @@ function custom_shell_init
   abbr l exa
   abbr b bin/rails
 
-  set -Ux EDITOR code
+  set -Ux EDITOR 'code --wait'
 
   # Setup rbenv
   set PATH $HOME/.rbenv/shims $PATH
