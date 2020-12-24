@@ -1,7 +1,7 @@
 [user]
 	name = Gerry Shaw
-	email = gshaw@venturemedia.com
-	signingkey = 44DB8CE8
+	email = gerry_shaw@yahoo.com
+	signingkey = 63984DE829068CDF32957905BADE0C4244DB8CE8
 [alias]
 	lg = log --graph --pretty=format:'%C(yellow)%h%Creset %s %C(cyan)<%an>%Creset' --abbrev-commit --date=relative
 	co = checkout
@@ -17,7 +17,7 @@
 	interactive = auto
 [core]
 	editor = code --wait
-	excludesfile = ~/.gitignore
+	excludesfile = /Users/gshaw/.gitignore
 	quotepath = false
 [github]
 	user = gshaw
@@ -42,8 +42,20 @@
 	clean = git-media-clean %f
 	smudge = git-media-smudge %f
 [filter "lfs"]
-	clean = git-lfs clean %f
-	smudge = git-lfs smudge %f
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
 	required = true
+	process = git-lfs filter-process
+[gpg]
+  program = /usr/local/bin/gpg
 [commit]
-	gpgsign = false
+	gpgsign = true
+	template = /Users/gshaw/.stCommitMsg
+[init]
+	defaultBranch = main
+[difftool "sourcetree"]
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path = 
+[mergetool "sourcetree"]
+	cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true

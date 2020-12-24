@@ -1,8 +1,9 @@
 .DS_Store
-.vscode
-.svn
+.elixir_ls
 .hg
 .hgignore
+.svn
+.vscode
 *~
 
 # Xcode

@@ -12,5 +12,9 @@ trim_trailing_whitespace = true
 [*.md]
 trim_trailing_whitespace = false
 
-[*.{cs}]
+[*.{c,cs,hdl,rs}]
 indent_size = 4
+
+[Makefile]
+indent_size = 4
+indent_style = tab
