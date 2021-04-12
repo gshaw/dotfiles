@@ -17,6 +17,10 @@ After installing, open a new terminal window to see the effects.
 
 ## Homebrew
 
+To configure Fish shell to init correctly
+
+echo "custom_shell_init" > ~/.config/fish/config.fish
+
 Update Homebrew packages and casks using:
 
 ```
@@ -33,10 +37,10 @@ cat Caskfile | xargs brew cask
 
 ## Features
 
-* Greet each new terminal with a fortune.  `brew install fortune`
+- Greet each new terminal with a fortune. `brew install fortune`
 
-* Custom Git prompt to detect branch and if branch is modified.
+- Custom Git prompt to detect branch and if branch is modified.
 
-* Custom abbreviations for common actions
+- Custom abbreviations for common actions
 
 ![Screenshot](https://cloud.githubusercontent.com/assets/33321/10742233/4f33fefa-7be9-11e5-9faa-bed22f83144a.png)
