@@ -24,15 +24,15 @@ echo "custom_shell_init" > ~/.config/fish/config.fish
 Update Homebrew packages and casks using:
 
 ```
-brew list > ~/.dotfiles/brew/Brewfile
-brew cask list > ~/.dotfiles/brew/Caskfile
+brew list --formula -1 > ~/.dotfiles/brew/Brewfile
+brew list --cask -1 > ~/.dotfiles/brew/Caskfile
 ```
 
 To restore packages:
 
 ```
-cat Brewfile | xargs brew
-cat Caskfile | xargs brew cask
+cat Brewfile | xargs brew install
+cat Caskfile | xargs brew install --cask
 ```
 
 ## Features

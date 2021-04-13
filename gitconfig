@@ -1,61 +1,54 @@
 [user]
-	name = Gerry Shaw
-	email = gerry_shaw@yahoo.com
-	signingkey = 63984DE829068CDF32957905BADE0C4244DB8CE8
+  name = Gerry Shaw
+  email = gerry_shaw@yahoo.com
+  signingkey = 63984DE829068CDF32957905BADE0C4244DB8CE8
 [alias]
-	lg = log --graph --pretty=format:'%C(yellow)%h%Creset %s %C(cyan)<%an>%Creset' --abbrev-commit --date=relative
-	co = checkout
-	st = status
-	br = branch
-    cp = cherry-pick
+  lg = log --graph --pretty=format:'%C(yellow)%h%Creset %s %C(cyan)<%an>%Creset' --abbrev-commit --date=relative
+  co = checkout
+  st = status
+  br = branch
+  cp = cherry-pick
 [apply]
-	whitespace = nowarn
+  whitespace = nowarn
 [color]
-	diff = auto
-	status = auto
-	branch = auto
-	interactive = auto
+  diff = auto
+  status = auto
+  branch = auto
+  interactive = auto
 [core]
-	editor = code --wait
-	excludesfile = /Users/gshaw/.gitignore
-	quotepath = false
+  editor = code --wait
+  excludesfile = /Users/gerry/.gitignore
+  quotepath = false
 [github]
-	user = gshaw
+  user = gshaw
 [diff]
-    tool = default-difftool
+  tool = default-difftool
 [difftool "default-difftool"]
-    cmd = code --wait --diff $LOCAL $REMOTE
+  cmd = code --wait --diff $LOCAL $REMOTE
 [branch]
-	autosetuprebase = always
+  autosetuprebase = always
 [push]
-	default = current
+  default = current
 [mergetool "Kaleidoscope"]
-	cmd = ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
-	trustExitCode = true
+  cmd = ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
+  trustExitCode = true
 [mergetool]
-	prompt = false
+  prompt = false
 [merge]
-	tool = Kaleidoscope
+  tool = Kaleidoscope
 [help]
-	autocorrect = 1
+  autocorrect = 1
 [filter "media"]
-	clean = git-media-clean %f
-	smudge = git-media-smudge %f
+  clean = git-media-clean %f
+  smudge = git-media-smudge %f
 [filter "lfs"]
-	clean = git-lfs clean -- %f
-	smudge = git-lfs smudge -- %f
-	required = true
-	process = git-lfs filter-process
+  clean = git-lfs clean -- %f
+  smudge = git-lfs smudge -- %f
+  required = true
+  process = git-lfs filter-process
 [gpg]
   program = /opt/homebrew/bin/gpg
 [commit]
-	gpgsign = true
-	template = /Users/gshaw/.stCommitMsg
+  gpgsign = true
 [init]
-	defaultBranch = main
-[difftool "sourcetree"]
-	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-	path =
-[mergetool "sourcetree"]
-	cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
-	trustExitCode = true
+  defaultBranch = main
