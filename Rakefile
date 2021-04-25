@@ -10,8 +10,7 @@ task :install do
   files = Dir["*"] - %w[
     brew
     fish
-    launchd
-    safari
+    gitx
     LICENSE
     Rakefile
     README.md
