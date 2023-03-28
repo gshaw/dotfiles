@@ -1,6 +1,9 @@
 function custom_shell_init
   abbr g git
   abbr m mix
+  abbr lbs /Users/gerry/.asdf/installs/elixir/1.13.0/.mix/escripts/livebook server
+  abbr sl swiftlint .
+  abbr sf swiftformat .
 
   # Uncomment for Rails work
   # abbr b bin/rails
