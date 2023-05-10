@@ -21,7 +21,7 @@ function custom_shell_init
   set -Ux ERL_AFLAGS '-kernel shell_history enabled'
 
   # Setup asdf
-  source /opt/homebrew/opt/asdf/asdf.fish
+  source /opt/homebrew/opt/asdf/libexec/asdf.fish
 
   # Setup Rust
   # set PATH $HOME/.cargo/bin $PATH
