@@ -17,6 +17,7 @@ function custom_shell_init
 
   # Setup Homebrew
   /opt/homebrew/bin/brew shellenv | source
+  fish_add_path /opt/homebrew/opt/postgresql@16/bin
 
   # Maintain IEx history
   # https://stackoverflow.com/a/45405071/265940
