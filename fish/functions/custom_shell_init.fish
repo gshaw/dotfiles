@@ -5,6 +5,8 @@ function custom_shell_init
   abbr sl swiftlint .
   abbr sf swiftformat .
 
+  abbr sleepnow pmset sleepnow
+
   # Uncomment for Rails work
   # abbr b bin/rails
   # abbr devlog tail -f log/development.log
