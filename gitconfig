@@ -48,6 +48,7 @@
   process = git-lfs filter-process
 [gpg]
   program = /opt/homebrew/bin/gpg
+  format = openpgp
 [commit]
   gpgsign = true
 [init]
