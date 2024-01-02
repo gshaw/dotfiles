@@ -1,7 +1,7 @@
 function custom_shell_init
   abbr g git
   abbr m mix
-  abbr l eza
+  abbr l eza --icons
   abbr lbs /Users/gerry/.asdf/installs/elixir/1.13.0/.mix/escripts/livebook server
   abbr sl swiftlint .
   abbr sf swiftformat .
@@ -29,4 +29,8 @@ function custom_shell_init
 
   # Setup Rust
   # set PATH $HOME/.cargo/bin $PATH
+
+  # Setup Startship prmopt
+  set -Ux STARSHIP_CONFIG ~/.dotfiles/starship.toml
+  starship init fish | source
 end
