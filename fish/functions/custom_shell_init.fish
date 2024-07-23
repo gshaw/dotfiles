@@ -1,10 +1,14 @@
 function custom_shell_init
   abbr g git
   abbr m mix
+  abbr ms mise
   abbr l eza --icons
   abbr lbs /Users/gerry/.asdf/installs/elixir/1.13.0/.mix/escripts/livebook server
-  abbr sl swiftlint .
+  abbr cs cspell --no-progress .
+  abbr sl swiftlint --quiet .
   abbr sf swiftformat .
+
+  abbr precheck "swiftformat . ; cspell --no-progress . ; swiftlint --quiet ."
 
   abbr sleepnow pmset sleepnow
 
@@ -25,12 +29,12 @@ function custom_shell_init
   set -Ux ERL_AFLAGS '-kernel shell_history enabled'
 
   # Setup .NET
-  set -Ux DOTNET_ROOT (rtx where dotnet)
+  # set -Ux DOTNET_ROOT (mise where dotnet)
 
   # Setup Rust
   # set PATH $HOME/.cargo/bin $PATH
 
-  # Setup Startship prmopt
+  # Setup Startship prompt
   set -Ux STARSHIP_CONFIG ~/.dotfiles/starship.toml
   starship init fish | source
 end

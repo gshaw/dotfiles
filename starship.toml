@@ -1,6 +1,6 @@
 # add_newline=true
 
-# emulate Pure prmopt
+# emulate Pure prompt
 # https://starship.rs/presets/pure-preset.html
 
 format = """

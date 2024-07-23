@@ -1,7 +1,9 @@
 # Gerry Shaw Dot Files
 
 These are config files to set up a system the I like it. It uses
-[Fish Shell](http://fishshell.com) and has only tested with Mac OS X.
+[Fish Shell](http://fishshell.com) and has only tested with macOS.
+
+[Mise](https://github.com/jdx/mise) is used to install programming languages and is managed via the `.tool-versions`.
 
 ## Installation
 
@@ -23,24 +25,20 @@ echo "custom_shell_init" > ~/.config/fish/config.fish
 
 Update Homebrew packages and casks using:
 
-```
-brew list --formula -1 > ~/.dotfiles/brew/Brewfile
-brew list --cask -1 > ~/.dotfiles/brew/Caskfile
+```sh
+brew leaves -r > ~/.dotfiles/brew/Brewfile
 ```
 
 To restore packages:
 
-```
+```sh
 cat Brewfile | xargs brew install
-cat Caskfile | xargs brew install --cask
 ```
 
 ## Features
 
 - Greet each new terminal with a fortune. `brew install fortune`
-
 - Custom Git prompt to detect branch and if branch is modified.
-
 - Custom abbreviations for common actions
 
 ![Screenshot](https://cloud.githubusercontent.com/assets/33321/10742233/4f33fefa-7be9-11e5-9faa-bed22f83144a.png)
