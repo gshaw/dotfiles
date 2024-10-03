@@ -12,7 +12,7 @@ trim_trailing_whitespace = true
 [*.md]
 trim_trailing_whitespace = false
 
-[*.{c,cs,hdl,rs}]
+[*.{c,cs,hdl,rs,swift}]
 indent_size = 4
 
 [Makefile]
