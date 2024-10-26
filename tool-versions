@@ -1,5 +1,5 @@
 dotnet 8.0.100
-elixir 1.16.0-otp-26
-erlang 26.2.1
-nodejs 21.5.0
-ruby 3.3.0
+elixir 1.17.3-otp-27
+erlang 27.1.2
+nodejs 23.1.0
+ruby   3.3.0
