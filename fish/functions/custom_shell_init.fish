@@ -1,14 +1,9 @@
 function custom_shell_init
   abbr g git
   abbr m mix
-  abbr ms mise
   abbr l eza --icons
-  abbr lbs /Users/gerry/.asdf/installs/elixir/1.13.0/.mix/escripts/livebook server
-  abbr cs cspell --no-progress .
-  abbr sl swiftlint --quiet .
-  abbr sf swiftformat .
-
-  abbr precheck "swiftformat . ; cspell --no-progress . ; swiftlint --quiet ."
+  abbr mr mise run
+  abbr mrc mise run check
 
   abbr sleepnow pmset sleepnow
 
