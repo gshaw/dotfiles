@@ -5,6 +5,8 @@ function custom_shell_init
   abbr mr mise run
   abbr mrc mise run check
 
+  abbr mp3dl yt-dlp --config-locations ~/.dotfiles/yt-dlp.mp3.conf
+
   abbr sleepnow pmset sleepnow
 
   # Uncomment for Rails work
@@ -13,11 +15,10 @@ function custom_shell_init
   # abbr guard bundle exec guard
 
   set -Ux EDITOR 'code --wait --new-window'
-  set -Ux DOKKU_HOST 'dokku.gshaw.ca'
 
   # Setup Homebrew
   /opt/homebrew/bin/brew shellenv | source
-  fish_add_path /opt/homebrew/opt/postgresql@16/bin
+  # fish_add_path /opt/homebrew/opt/postgresql@17/bin
 
   # Maintain IEx history
   # https://stackoverflow.com/a/45405071/265940
@@ -29,7 +30,7 @@ function custom_shell_init
   # Setup Rust
   # set PATH $HOME/.cargo/bin $PATH
 
-  # Setup Startship prompt
+  # Setup Starship prompt
   set -Ux STARSHIP_CONFIG ~/.dotfiles/starship.toml
   starship init fish | source
 end
