@@ -6,6 +6,7 @@ function custom_shell_init
   abbr mrc mise run check
 
   abbr mp3dl yt-dlp --config-locations ~/.dotfiles/yt-dlp.mp3.conf
+  abbr dsdestroy find . -name '*.DS_Store' -type f -delete
 
   abbr sleepnow pmset sleepnow
 
@@ -14,23 +15,28 @@ function custom_shell_init
   # abbr devlog tail -f log/development.log
   # abbr guard bundle exec guard
 
-  set -Ux EDITOR 'code --wait --new-window'
-
-  # Setup Homebrew
-  /opt/homebrew/bin/brew shellenv | source
-  # fish_add_path /opt/homebrew/opt/postgresql@17/bin
+  set -gx EDITOR 'code --wait --new-window'
 
   # Maintain IEx history
   # https://stackoverflow.com/a/45405071/265940
-  set -Ux ERL_AFLAGS '-kernel shell_history enabled'
+  set -gx ERL_AFLAGS '-kernel shell_history enabled'
 
-  # Setup .NET
-  # set -Ux DOTNET_ROOT (mise where dotnet)
-
-  # Setup Rust
-  # set PATH $HOME/.cargo/bin $PATH
+  # Setup Homebrew
+  /opt/homebrew/bin/brew shellenv | source
 
   # Setup Starship prompt
-  set -Ux STARSHIP_CONFIG ~/.dotfiles/starship.toml
+  set -gx STARSHIP_CONFIG ~/.dotfiles/starship.toml
   starship init fish | source
+
+  # Setup PostgreSQL
+  # fish_add_path /opt/homebrew/opt/postgresql@17/bin
+
+  # Setup LM Studio
+  fish_add_path $HOME/.lmstudio/bin
+
+  # Setup .NET
+  # set -gx DOTNET_ROOT (mise where dotnet)
+
+  # Setup Rust
+  # fish_add_path $HOME/.cargo/bin
 end
