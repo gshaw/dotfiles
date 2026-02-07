@@ -4,7 +4,8 @@ require "erb"
 desc "Install the dot files into user's home directory"
 task :install do
   # link Fish Shell config
-  system %Q{ln -fs "$PWD/fish/functions" "$HOME/.config/fish"}
+  system %Q{mkdir -p "$HOME/.config/fish"}
+  system %Q{ln -fs "$PWD/fish/functions" "$HOME/.config/fish/functions"}
 
   replace_all = false
   files = Dir["*"] - %w[

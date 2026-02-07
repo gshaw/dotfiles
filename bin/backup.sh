@@ -1,3 +1,6 @@
+# TODO: Fix this script using the assumption that all music and media is on HD
+# Add support for healthchecks to to monitor backups
+
 echo "***** Backing up Desktop"
 rsync -av --delete /Users/gerry/Desktop/ /Volumes/Tiny\ Drive/Backup/Desktop/
 echo "***** Backing up Developer"

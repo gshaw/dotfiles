@@ -1,14 +1,15 @@
 function custom_shell_init
   abbr g git
-  abbr m mix
-  abbr l eza --icons
+  abbr l eza
+  abbr la eza --git -lao --no-permissions --no-user
   abbr mr mise run
   abbr mrc mise run check
 
-  abbr mp3dl yt-dlp --config-locations ~/.dotfiles/yt-dlp.mp3.conf
+  abbr m4a yt-dlp --config-locations ~/.dotfiles/yt-dlp.conf
   abbr dsdestroy find . -name '*.DS_Store' -type f -delete
 
-  abbr sleepnow pmset sleepnow
+  abbr sn pmset sleepnow
+  abbr oc opencode
 
   # Uncomment for Rails work
   # abbr b bin/rails
@@ -39,4 +40,7 @@ function custom_shell_init
 
   # Setup Rust
   # fish_add_path $HOME/.cargo/bin
+
+  # Setup Sprites.dev CLI (sprite)
+  fish_add_path $HOME/.local/bin
 end

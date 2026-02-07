@@ -32,6 +32,10 @@ style = "bright-black"
 [git_status]
 format = "[[(*$conflicted$untracked$modified$staged$renamed$deleted)](red) ($ahead_behind$stashed)]($style)"
 style = "cyan"
+
+# The values for conflicted, untracked, modified, staged, renamed, deleted
+# are zero-width space characters (U+200B).  This is an intentional trick to
+# trigger the * dirty indicator without showing individual markers.
 conflicted = "​"
 untracked = "​"
 modified = "​"
