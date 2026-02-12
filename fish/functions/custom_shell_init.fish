@@ -2,6 +2,7 @@ function custom_shell_init
   abbr g git
   abbr l eza
   abbr la eza --git -lao --no-permissions --no-user
+  abbr mdl markdownlint-cli2
   abbr mr mise run
   abbr mrc mise run check
 
@@ -9,7 +10,7 @@ function custom_shell_init
   abbr dsdestroy find . -name '*.DS_Store' -type f -delete
 
   abbr sn pmset sleepnow
-  abbr oc opencode
+  abbr oc opencode -c
 
   # Uncomment for Rails work
   # abbr b bin/rails
