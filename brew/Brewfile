@@ -1,46 +1,107 @@
-btop
-cmake
-codespell
-coreutils
-docker
-eccodes
-eza
-fd
-ffmpeg
-fish
-flyctl
-fortune
-fzf
-gawk
-gh
-ghostscript
-git
-gobject-introspection
-graphicsmagick
-htop
-jq
-libgsf
-libmatio
-libxslt
-libyaml
-lokalise2
-mailpit
-mise
-nghttp2
-node
-open-mpi
-openssl@1.1
-pinentry-mac
-poppler
-postgresql@16
-puma/puma/puma-dev
-pwgen
-ripgrep
-starship
-supabase/tap/supabase
-taglib
-telnet
-transmission-cli
-wget
-wxwidgets
-yarn
+tap "anomalyco/tap"
+tap "benbjohnson/litestream"
+tap "getsentry/tools"
+tap "puma/puma"
+tap "supabase/tap"
+brew "openssl@3"
+brew "btop"
+brew "gmp"
+brew "coreutils"
+brew "deno"
+brew "eza"
+brew "fd"
+brew "ffmpeg"
+brew "fish"
+brew "flyctl"
+brew "fortune"
+brew "gnupg"
+brew "gdal"
+brew "gh"
+brew "git"
+brew "graphicsmagick"
+brew "jq"
+brew "lazygit"
+brew "libyaml"
+brew "markdownlint-cli2"
+brew "mise"
+brew "pinentry-mac"
+brew "postgresql@17", restart_service: :changed
+brew "pwgen"
+brew "ripgrep"
+brew "sourcekitten"
+brew "starship"
+brew "telnet"
+brew "wget"
+brew "xcode-build-server"
+brew "yt-dlp"
+brew "zsh"
+brew "anomalyco/tap/opencode"
+brew "benbjohnson/litestream/litestream"
+brew "puma/puma/puma-dev"
+brew "supabase/tap/supabase"
+cask "claude-code"
+cask "docker-desktop"
+cask "font-fira-code"
+cask "font-hack-nerd-font"
+cask "font-inter"
+cask "font-jetbrains-mono"
+cask "font-sf-mono"
+cask "gitbutler"
+cask "github"
+cask "github-copilot-for-xcode"
+cask "gitx"
+cask "lm-studio"
+cask "native-access"
+cask "sf-symbols"
+cask "steam"
+vscode "azemoh.one-monokai"
+vscode "benvp.vscode-hex-pm-intellisense"
+vscode "bradlc.vscode-tailwindcss"
+vscode "charliermarsh.ruff"
+vscode "codezombiech.gitignore"
+vscode "davidanson.vscode-markdownlint"
+vscode "dbaeumer.vscode-eslint"
+vscode "deerawan.vscode-dash"
+vscode "denoland.vscode-deno"
+vscode "docker.docker"
+vscode "editorconfig.editorconfig"
+vscode "esbenp.prettier-vscode"
+vscode "github.copilot-chat"
+vscode "github.github-vscode-theme"
+vscode "github.vscode-github-actions"
+vscode "heybourn.headwind"
+vscode "inferrinizzard.prettier-sql-vscode"
+vscode "jakebecker.elixir-ls"
+vscode "koichisasada.vscode-rdbg"
+vscode "llvm-vs-code-extensions.lldb-dap"
+vscode "mechatroner.rainbow-csv"
+vscode "medo64.render-crlf"
+vscode "mhutchie.git-graph"
+vscode "mrorz.language-gettext"
+vscode "ms-dotnettools.csdevkit"
+vscode "ms-dotnettools.csharp"
+vscode "ms-dotnettools.dotnet-maui"
+vscode "ms-dotnettools.vscode-dotnet-runtime"
+vscode "ms-python.debugpy"
+vscode "ms-python.python"
+vscode "ms-python.vscode-pylance"
+vscode "ms-python.vscode-python-envs"
+vscode "ms-vscode-remote.remote-containers"
+vscode "ms-vscode.cmake-tools"
+vscode "ms-vscode.cpptools"
+vscode "ms-vscode.makefile-tools"
+vscode "pantajoe.vscode-elixir-credo"
+vscode "phoenixframework.phoenix"
+vscode "redhat.vscode-yaml"
+vscode "richie5um2.vscode-sort-json"
+vscode "shopify.ruby-extensions-pack"
+vscode "shopify.ruby-lsp"
+vscode "skyapps.fish-vscode"
+vscode "sleistner.vscode-fileutils"
+vscode "sorbet.sorbet-vscode-extension"
+vscode "stkb.rewrap"
+vscode "streetsidesoftware.code-spell-checker"
+vscode "swiftlang.swift-vscode"
+vscode "tamasfe.even-better-toml"
+vscode "vadimcn.vscode-lldb"
+vscode "zhuangtongfa.material-theme"
