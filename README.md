@@ -10,11 +10,16 @@ These are config files to set up a system the I like it. It uses
 Run the following commands in your terminal. It will prompt you before it does anything destructive. Check out the [Rakefile](https://github.com/ryanb/dotfiles/blob/custom-bash-zsh/Rakefile) to see exactly what it does.
 
 ```terminal
-git clone git://github.com/gshaw/dotfiles ~/.dotfiles
+git clone https://github.com/gshaw/dotfiles ~/Developer/dotfiles
+ln -s ~/Developer/dotfiles ~/.dotfiles
 cd ~/.dotfiles
 rake install
 rake bin
 ```
+
+The repo lives in `~/Developer` with the other code, and `~/.dotfiles` is a symlink to
+it. Keep that symlink: the Rakefile, `config.fish`, and every link `rake install` writes
+into `$HOME` all go through the `~/.dotfiles` path.
 
 `rake bin` symlinks everything in `bin/` into `~/.local/bin`, which
 `custom_shell_init.fish` adds to PATH. After installing, open a new terminal window to
