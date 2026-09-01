@@ -1,0 +1,160 @@
+#!/usr/bin/env bash
+# git prco <pr-or-issue-number> [--force] [gh pr checkout flags...]
+#
+# Like `gh pr checkout`, but:
+#  - it lands the branch in the MAIN worktree, removing the linked worktree
+#    that holds it (only when that worktree is clean);
+#  - the number may be an issue, in which case it resolves to the PR that
+#    closes it, or failing that a PR whose branch is named <issue>-<slug>;
+#  - it is fast. One GraphQL call answers "PR or issue?", the branch name and
+#    the head SHA together, and when that SHA is already in the object store
+#    (it is, whenever the branch was pushed from a worktree of this repo) the
+#    checkout is entirely local: no fetch, no second round trip.
+set -euo pipefail
+
+# gh's update check can add a second or two to a one-call script.
+export GH_NO_UPDATE_NOTIFIER=1
+
+die() { printf 'git prco: %s\n' "$1" >&2; exit 1; }
+say() { printf 'git prco: %s\n' "$1" >&2; }
+
+[ $# -ge 1 ] || die "usage: git prco <pr-or-issue-number> [--force] [gh pr checkout flags...]"
+arg="$1"; shift
+force=""
+rest=()
+for a in "$@"; do
+  case "$a" in
+    -f|--force) force=1 ;;
+    *) rest+=("$a") ;;
+  esac
+done
+
+command -v gh >/dev/null || die "gh is not installed"
+git rev-parse --git-dir >/dev/null 2>&1 || die "not a git repository"
+case "$arg" in ''|*[!0-9]*) die "'$arg' is not a PR or issue number" ;; esac
+
+# First entry of `git worktree list` is always the main worktree.
+main=$(git worktree list --porcelain | awk '/^worktree /{print substr($0,10); exit}')
+[ -n "$main" ] || die "could not find the main worktree"
+cd "$main"
+
+# owner/name from the remote URL: local, so it costs nothing.
+slug=$(git config --get remote.origin.url \
+  | sed -E 's#^(https?://[^/]+/|git@[^:]+:|ssh://([^@]+@)?[^/]+/)##; s#\.git$##')
+case "$slug" in */*) ;; *) die "could not read owner/name from remote.origin.url" ;; esac
+owner=${slug%%/*}; name=${slug##*/}
+
+# One round trip. GraphQL still returns the half that exists when the other
+# half 404s, so this answers "PR or issue?" without a probe call.
+json=$(gh api graphql -F owner="$owner" -F name="$name" -F n="$arg" -f query='
+query($owner:String!,$name:String!,$n:Int!){
+  repository(owner:$owner,name:$name){
+    pullRequest(number:$n){ number state headRefName headRefOid isCrossRepository }
+    issue(number:$n){ number
+      closedByPullRequestsReferences(first:20){ nodes{
+        number state title headRefName headRefOid isCrossRepository
+        repository{ nameWithOwner } } } }
+  }
+}' 2>/dev/null) || true
+[ -n "$json" ] || die "could not reach GitHub for #$arg"
+
+# Emits one TSV line: OK|AMBIG|NONE, then the fields.
+resolved=$(printf '%s' "$json" | REPO="$slug" N="$arg" python3 -c '
+import json, os, sys
+d = (json.load(sys.stdin).get("data") or {}).get("repository") or {}
+repo, n = os.environ["REPO"], os.environ["N"]
+def row(p, tag="OK"):
+    print("\t".join([tag, str(p["number"]), p["state"], p["headRefName"],
+                     p["headRefOid"], "1" if p["isCrossRepository"] else ""]))
+pr = d.get("pullRequest")
+if pr:
+    row(pr); sys.exit()
+issue = d.get("issue")
+if not issue:
+    print("NONE"); sys.exit()
+nodes = [p for p in issue["closedByPullRequestsReferences"]["nodes"]
+         if p["repository"]["nameWithOwner"] == repo]
+if not nodes:
+    print("NONE\tissue"); sys.exit()
+open_ = [p for p in nodes if p["state"] == "OPEN"]
+pick = open_ or nodes
+if len(pick) == 1:
+    row(pick[0], "OK")
+else:
+    print("AMBIG")
+    for p in pick:
+        print("\t".join([str(p["number"]), p["state"], p["title"]]))
+')
+
+status=$(printf '%s' "$resolved" | head -1 | cut -f1)
+case "$status" in
+  AMBIG)
+    printf 'git prco: issue #%s has several pull requests; pass the one you want:\n' "$arg" >&2
+    printf '%s' "$resolved" | tail -n +2 | awk -F'\t' '{printf "  #%s  %-7s %s\n", $1, $2, $3}' >&2
+    exit 1 ;;
+  NONE)
+    if [ "$(printf '%s' "$resolved" | cut -f2)" = issue ]; then
+      # Nothing linked: fall back to the <issue>-<slug> branch convention.
+      b=$(git for-each-ref --format='%(refname:short)' "refs/remotes/origin/$arg-*" | head -1)
+      [ -n "$b" ] && die "issue #$arg has no linked PR (branch ${b#origin/} looks related; check it out by name)"
+      die "issue #$arg has no pull request linked to it"
+    fi
+    die "#$arg is neither a pull request nor an issue in $slug" ;;
+esac
+
+IFS=$'\t' read -r _ pr _state branch oid cross <<<"$(printf '%s' "$resolved" | head -1)"
+[ "$pr" = "$arg" ] || say "issue #$arg is closed by PR #$pr"
+
+# Is some other worktree holding that branch? If so it blocks the checkout.
+holder=$(git worktree list --porcelain | awk -v b="refs/heads/$branch" '
+  /^worktree /{ path = substr($0, 10) }
+  $0 == "branch " b { print path; exit }')
+if [ -n "$holder" ] && [ "$holder" != "$main" ]; then
+  if [ -n "$(git -C "$holder" status --porcelain)" ]; then
+    die "worktree $holder has uncommitted changes on $branch; commit or discard them first"
+  fi
+  say "removing worktree $holder (clean, holds $branch)"
+  git worktree remove "$holder"
+fi
+
+# A fork's head is not on origin; gh knows how to name and fetch it.
+if [ -n "$cross" ]; then
+  exec gh pr checkout "$pr" ${force:+--force} "${rest[@]:-}"
+fi
+if [ ${#rest[@]} -gt 0 ]; then
+  exec gh pr checkout "$pr" ${force:+--force} "${rest[@]}"
+fi
+
+# The head commit is usually already here: worktrees share the object store,
+# so a branch pushed from one needs no fetch to be checked out in another.
+if ! git cat-file -e "$oid^{commit}" 2>/dev/null; then
+  say "fetching $branch"
+  git fetch --quiet origin "+refs/heads/$branch:refs/remotes/origin/$branch"
+  git cat-file -e "$oid^{commit}" 2>/dev/null \
+    || die "origin/$branch is not at $oid; the PR moved, run it again"
+else
+  git update-ref "refs/remotes/origin/$branch" "$oid"
+fi
+
+if git show-ref --verify --quiet "refs/heads/$branch"; then
+  local_tip=$(git rev-parse "$branch")
+  git switch --quiet "$branch"
+  if [ "$local_tip" != "$oid" ]; then
+    if git merge-base --is-ancestor "$local_tip" "$oid"; then
+      git merge --ff-only --quiet "$oid"
+      say "fast-forwarded $branch to the PR head"
+    elif git merge-base --is-ancestor "$oid" "$local_tip"; then
+      say "on $branch, which is ahead of the PR head by $(git rev-list --count "$oid..$local_tip") commit(s)"
+    elif [ -n "$force" ]; then
+      git reset --hard --quiet "$oid"
+      say "reset $branch to the PR head"
+    else
+      die "$branch has diverged from the PR head; use --force to reset to it"
+    fi
+  fi
+else
+  git switch --quiet --create "$branch" --track "origin/$branch"
+fi
+
+git --no-pager log -1 --format='%C(yellow)%h%Creset %s' HEAD
+say "on $branch (PR #$pr)"

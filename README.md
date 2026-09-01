@@ -13,9 +13,20 @@ Run the following commands in your terminal. It will prompt you before it does a
 git clone git://github.com/gshaw/dotfiles ~/.dotfiles
 cd ~/.dotfiles
 rake install
+rake bin
 ```
 
-After installing, open a new terminal window to see the effects.
+`rake bin` symlinks everything in `bin/` into `~/.local/bin`, which
+`custom_shell_init.fish` adds to PATH. After installing, open a new terminal window to
+see the effects.
+
+## Commands in `bin/`
+
+- **`git-prco`** — `git prco <pr-or-issue-number>` checks out a pull request in the
+  **main** worktree, removing the linked worktree that holds its branch, and takes the
+  issue number as well as the PR number. One GitHub round trip, and no fetch when the
+  commit is already in the shared object store. Reasoning and measurements:
+  `Workshop/Tooling/git-prco.md`.
 
 ## Homebrew
 

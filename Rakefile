@@ -9,6 +9,7 @@ task :install do
 
   replace_all = false
   files = Dir["*"] - %w[
+    bin
     brew
     fish
     gitx
@@ -40,6 +41,21 @@ task :install do
     else
       link_file(file)
     end
+  end
+end
+
+desc "Link bin/* into ~/.local/bin, which custom_shell_init.fish puts on PATH"
+task :bin do
+  dest = File.join(ENV["HOME"], ".local", "bin")
+  system %Q{mkdir -p "#{dest}"}
+  Dir["bin/*"].each do |file|
+    target = File.join(dest, File.basename(file))
+    if File.exist?(target) && !File.symlink?(target)
+      puts "skipping #{target}, a real file is already there"
+      next
+    end
+    puts "linking #{target}"
+    system %Q{ln -sfn "$PWD/#{file}" "#{target}"}
   end
 end
 
