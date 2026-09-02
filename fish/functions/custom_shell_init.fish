@@ -10,7 +10,6 @@ function custom_shell_init
   abbr dsdestroy find . -name '*.DS_Store' -type f -delete
 
   abbr sn pmset sleepnow
-  abbr oc opencode -c
 
   # Uncomment for Rails work
   # abbr b bin/rails
