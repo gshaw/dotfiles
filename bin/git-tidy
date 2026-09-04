@@ -1,0 +1,163 @@
+#!/usr/bin/env bash
+# git tidy [-n|--dry-run] [-y|--yes] [--worktrees|--branches]
+#
+# Puts the branch list back to what you actually work on: removes the linked
+# worktrees agents leave behind, and deletes the local branches whose work has
+# landed. Companion to `git prco`.
+#
+# What it will delete:
+#  - every CLEAN linked worktree (the branch survives; only the directory goes),
+#    plus the admin files of worktrees whose directory is already gone;
+#  - a local branch whose pull request is MERGED;
+#  - a local branch with no pull request whose commits are all in the default
+#    branch already, by patch id, so squash merges count.
+#
+# What it never touches: the default branch, the current branch, a branch with
+# an OPEN pull request, a branch whose PR was closed unmerged, a branch holding
+# commits that are not upstream, and any dirty worktree.
+set -euo pipefail
+
+export GH_NO_UPDATE_NOTIFIER=1
+
+die() { printf 'git tidy: %s\n' "$1" >&2; exit 1; }
+say() { printf 'git tidy: %s\n' "$1" >&2; }
+
+dry=""; yes=""; do_worktrees=1; do_branches=1
+for a in "$@"; do
+  case "$a" in
+    -n|--dry-run) dry=1 ;;
+    -y|--yes) yes=1 ;;
+    --worktrees) do_branches="" ;;
+    --branches) do_worktrees="" ;;
+    -h|--help) sed -n '2,20p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
+    *) die "unknown option '$a'" ;;
+  esac
+done
+
+git rev-parse --git-dir >/dev/null 2>&1 || die "not a git repository"
+
+# First entry of `git worktree list` is always the main worktree.
+main=$(git worktree list --porcelain | awk '/^worktree /{print substr($0,10); exit}')
+[ -n "$main" ] || die "could not find the main worktree"
+cd "$main"
+
+default=$(git symbolic-ref --quiet --short refs/remotes/origin/HEAD 2>/dev/null || true)
+default=${default#origin/}
+if [ -z "$default" ]; then
+  for b in main master; do
+    git show-ref --verify --quiet "refs/heads/$b" && { default=$b; break; }
+  done
+fi
+[ -n "$default" ] || die "could not work out the default branch"
+current=$(git symbolic-ref --quiet --short HEAD 2>/dev/null || true)
+
+say "fetching origin"
+git fetch --quiet --prune origin || say "fetch failed; working from what is local"
+git worktree prune
+
+base="origin/$default"
+git show-ref --verify --quiet "refs/remotes/$base" || base="$default"
+
+# --- worktrees -------------------------------------------------------------
+wt_remove=(); wt_broken=(); wt_keep=()
+if [ -n "$do_worktrees" ]; then
+  while IFS= read -r path; do
+    [ "$path" = "$main" ] && continue
+    case "$path" in "$main"/*) ;; *) wt_keep+=("$path  (outside this repo, left alone)"); continue ;; esac
+    # A worktree whose branch ref is gone has an all-zero HEAD, and then every
+    # tracked file reads as a staged add. That is broken, not dirty.
+    if ! git -C "$path" rev-parse --verify --quiet HEAD >/dev/null 2>&1; then
+      wt_broken+=("$path")
+    elif [ -n "$(git -C "$path" status --porcelain 2>/dev/null)" ]; then
+      wt_keep+=("$path  (uncommitted changes)")
+    else
+      wt_remove+=("$path")
+    fi
+  done < <(git worktree list --porcelain | awk '/^worktree /{print substr($0,10)}')
+fi
+
+# --- branches --------------------------------------------------------------
+# One round trip answers every branch at once. macOS ships bash 3.2, which has
+# no associative arrays, so the answers live in one TSV string.
+pr_lines=""
+if [ -n "$do_branches" ] && command -v gh >/dev/null; then
+  pr_lines=$(gh pr list --state all --limit 300 --json headRefName,state \
+               --jq '.[] | "\(.headRefName)\t\(.state)"' 2>/dev/null || true)
+fi
+
+# OPEN outranks MERGED outranks CLOSED when one branch name was reused.
+pr_state_of() {
+  printf '%s\n' "$pr_lines" | awk -F'\t' -v b="$1" '
+    $1 == b && $2 == "OPEN"   { print "OPEN"; found = 1; exit }
+    $1 == b && $2 == "MERGED" { m = 1 }
+    $1 == b                   { c = 1 }
+    END { if (!found) { if (m) print "MERGED"; else if (c) print "CLOSED" } }'
+}
+
+br_delete=(); br_keep=()
+if [ -n "$do_branches" ]; then
+  while IFS= read -r b; do
+    [ "$b" = "$default" ] && continue
+    [ "$b" = "$current" ] && { br_keep+=("$b  (checked out here)"); continue; }
+    held=$(git worktree list --porcelain | awk -v r="refs/heads/$b" '
+      /^worktree /{ p = substr($0,10) } $0 == "branch " r { print p; exit }')
+    # A worktree this run is about to remove is not a reason to keep the branch.
+    if [ -n "$held" ]; then
+      keep_held=1
+      for w in ${wt_remove[@]+"${wt_remove[@]}"}; do [ "$w" = "$held" ] && keep_held=""; done
+      [ -n "$keep_held" ] && { br_keep+=("$b  (checked out in $held)"); continue; }
+    fi
+    case "$(pr_state_of "$b")" in
+      OPEN)   br_keep+=("$b  (open pull request)"); continue ;;
+      MERGED) br_delete+=("$b  merged"); continue ;;
+      CLOSED) br_keep+=("$b  (pull request closed unmerged)"); continue ;;
+    esac
+    # No pull request. Safe only when every commit is already upstream:
+    # git cherry compares patch ids, so a squash merge still counts.
+    if [ -z "$(git cherry "$base" "$b" 2>/dev/null | grep '^+' || true)" ]; then
+      br_delete+=("$b  in $default already")
+    else
+      br_keep+=("$b  ($(git rev-list --count "$base..$b") commit(s) not in $default, no PR)")
+    fi
+  done < <(git for-each-ref --format='%(refname:short)' refs/heads/)
+fi
+
+# --- report and act --------------------------------------------------------
+n=$(( ${#wt_remove[@]} + ${#wt_broken[@]} + ${#br_delete[@]} ))
+if [ ${#wt_remove[@]} -gt 0 ] || [ ${#wt_broken[@]} -gt 0 ]; then
+  printf '\nWorktrees to remove (%d):\n' "$(( ${#wt_remove[@]} + ${#wt_broken[@]} ))"
+  [ ${#wt_remove[@]} -gt 0 ] && printf '  %s\n' "${wt_remove[@]#$main/}"
+  [ ${#wt_broken[@]} -gt 0 ] && printf '  %s  (branch ref gone)\n' "${wt_broken[@]#$main/}"
+fi
+if [ ${#br_delete[@]} -gt 0 ]; then
+  printf '\nBranches to delete (%d):\n' "${#br_delete[@]}"
+  printf '  %s\n' "${br_delete[@]}"
+fi
+if [ ${#br_keep[@]} -gt 0 ] || [ ${#wt_keep[@]} -gt 0 ]; then
+  printf '\nKeeping:\n'
+  printf '  %s\n' ${br_keep[@]+"${br_keep[@]}"} ${wt_keep[@]+"${wt_keep[@]}"}
+fi
+
+[ "$n" -eq 0 ] && { printf '\n'; say "nothing to tidy"; exit 0; }
+[ -n "$dry" ] && { printf '\n'; say "dry run, nothing removed"; exit 0; }
+
+if [ -z "$yes" ]; then
+  printf '\nProceed? [y/N] ' >&2
+  read -r reply </dev/tty || reply=""
+  case "$reply" in [yY]*) ;; *) say "nothing removed"; exit 1 ;; esac
+fi
+
+printf '\n'
+for w in ${wt_remove[@]+"${wt_remove[@]}"}; do
+  git worktree remove "$w" && printf '  removed worktree %s\n' "${w#$main/}"
+done
+for w in ${wt_broken[@]+"${wt_broken[@]}"}; do
+  git worktree remove --force "$w" && printf '  removed worktree %s\n' "${w#$main/}"
+done
+for entry in ${br_delete[@]+"${br_delete[@]}"}; do
+  b=${entry%% *}
+  # -D, not -d: a squash-merged branch is not an ancestor and -d refuses it.
+  git branch -D "$b" >/dev/null && printf '  deleted branch %s\n' "$b"
+done
+git worktree prune
+say "done: $(git for-each-ref --format='%(refname:short)' refs/heads/ | wc -l | tr -d ' ') branches left"
